@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+model Card {
+  id                String     @id
+  multiverse_id     Int?
+  prints_search_uri String
+  name              String
+  mana_cost         String
+  oracle_text       String?
+  usd               String?
+  usd_etched        String?
+  usd_foil          String?
+  img_large         String?
+  img_normal        String?
+  img_small         String?
+  faces             CardFace[]
+}
+
+model CardFace {
+  id          String
+  face_number Int
+  card        Card    @relation(fields: [id], references: [id])
+  name        String
+  img_large   String?
+  img_normal  String?
+  img_small   String?
+
+  @@id([id, face_number])
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
