@@ -7,13 +7,14 @@ generator client {
 }
 
 model Card {
-  id                String     @id
-  name              String
-  usd               String?
-  usd_etched        String?
-  usd_foil          String?
-  img       String?
-  faces             CardFace[]
+  id           String     @id
+  name         String
+  scryfall_uri String
+  usd          String?
+  usd_etched   String?
+  usd_foil     String?
+  img          String?
+  faces        CardFace[]
 }
 
 model CardFace {
@@ -21,7 +22,7 @@ model CardFace {
   face_number Int
   card        Card    @relation(fields: [id], references: [id])
   name        String
-  img String?
+  img         String?
 
   @@id([id, face_number])
 }

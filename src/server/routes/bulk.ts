@@ -35,6 +35,7 @@ bulk.patch("/refresh",(_: Request, res: Response) => {
               create: {
                 id: card.id,
                 name: card.name,
+                scryfall_uri:card.uri,
                 usd: card.prices.usd ? card.prices.usd : null,
                 usd_foil: card.prices.usd_foil ? card.prices.usd_foil : null,
                 usd_etched: card.prices.usd_etched ? card.prices.usd_etched : null,
@@ -63,6 +64,7 @@ bulk.patch("/refresh",(_: Request, res: Response) => {
               create: {
                 id: card.id,
                 name: card.name,
+                scryfall_uri:card.uri,
                 usd: card.prices.usd ? card.prices.usd : null,
                 usd_foil: card.prices.usd_foil ? card.prices.usd_foil : null,
                 usd_etched: card.prices.usd_etched ? card.prices.usd_etched : null,
