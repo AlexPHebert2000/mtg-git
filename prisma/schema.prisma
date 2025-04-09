@@ -8,17 +8,11 @@ generator client {
 
 model Card {
   id                String     @id
-  multiverse_id     Int?
-  prints_search_uri String
   name              String
-  mana_cost         String
-  oracle_text       String?
   usd               String?
   usd_etched        String?
   usd_foil          String?
-  img_large         String?
-  img_normal        String?
-  img_small         String?
+  img       String?
   faces             CardFace[]
 }
 
@@ -27,9 +21,7 @@ model CardFace {
   face_number Int
   card        Card    @relation(fields: [id], references: [id])
   name        String
-  img_large   String?
-  img_normal  String?
-  img_small   String?
+  img String?
 
   @@id([id, face_number])
 }
