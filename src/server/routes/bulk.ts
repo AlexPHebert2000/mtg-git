@@ -7,7 +7,6 @@ const bulk = Router();
 const prisma = new PrismaClient();
 
 bulk.patch("/refresh",(_: Request, res: Response) => {
-  let counter = 0;
   axios.get("https://api.scryfall.com/bulk-data/oracle-cards")
     .then(({data}) => {
       console.time("Download");
@@ -15,6 +14,7 @@ bulk.patch("/refresh",(_: Request, res: Response) => {
     })
     .then(({data} : {data: ScryfallCard[]}) => {
       console.timeEnd("Download");
+      data = data.filter((card) => card.layout !== "art_series");
       const chunkSize = 200;
       const numChunks = data.length / chunkSize;
       for (let i = 0; i < numChunks; i++) {
@@ -75,7 +75,6 @@ bulk.patch("/refresh",(_: Request, res: Response) => {
           console.timeEnd(timerMsg);
         })
       }
-      console.log(data.length);
       res.sendStatus(200);
     })
     .catch((error) => {
@@ -86,6 +85,22 @@ bulk.patch("/refresh",(_: Request, res: Response) => {
       prisma.$disconnect();
     })
 })
+
+bulk.delete("", (_: Request, res: Response) => {
+  prisma.cardFace.deleteMany({})
+  .then(() => {
+    return prisma.card.deleteMany({})
+  })
+  .then(() => {
+    res.sendStatus(200);
+  })
+  .catch((e: Error)=>{
+    console.log(e.message);
+  })
+  .finally(() => {
+    prisma.$disconnect();
+  })
+});
 
 interface ScryfallCard {
   arena_id : number | null,
