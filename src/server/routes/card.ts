@@ -11,7 +11,6 @@ const prisma = new PrismaClient();
 card.get("/search", async (req: Request, res: Response) => {
   try{
     const { q } = req.query;
-    console.log(req.query)
     const searchResults = await axios.get(`https://api.scryfall.com/cards/search?q=${q}`);
     const dbCards = await Promise.allSettled(searchResults.data.data.map((card :ScryfallCard) => (
       prisma.card.findUnique({

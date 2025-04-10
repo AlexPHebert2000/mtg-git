@@ -1,36 +1,40 @@
 import "./App.css";
 
 import { useState } from "react";
-
-import reactLogo from "./assets/react.svg";
+import type React from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [search, setSearch] = useState("");
+  const searchMut = useMutation({
+    mutationFn: () => {
+      return axios.get(`http://localhost:3000/api/card/search?q=${search}`)
+    },
+  })
+
+  const handleSearchChange = (e : React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handleSearchClick = (e : React.MouseEvent<HTMLButtonElement>) => {
+    searchMut.mutate();
+  }
 
   return (
     <div className="App">
+      <input type="text" value={search} onChange={handleSearchChange}></input>
+      <button onClick={handleSearchClick}>Search</button>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {searchMut.isSuccess ? 
+        <>
+          {searchMut.data.data.map((card) => <img style={{height:"300px"}} src={card.img}></img>)}
+        </> : 
+        <>Waiting</>}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   );
 }
 
 export default App;
+ 
